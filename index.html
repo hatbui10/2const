@@ -2,410 +2,152 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Bit Block Matcher</title>
+<title>Random Grid</title>
 
 <style>
-body {
-  font-family: system-ui, sans-serif;
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
-  padding: 40px 16px;
-  display: flex;
-  justify-content: center;
-  overflow-x: auto;
+
+body{
+    background:#0b0f1a;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    height:100vh;
+    font-family:Arial;
+    margin: 40px auto;
 }
 
-/* ===== CARD ===== */
-.card {
-  background: #7c3aed;
-  padding: 24px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.15);
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  max-width: 95vw;
+.container{
+    background:#111827;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 0 20px #00ffff55;
+    text-align:center;
 }
 
-/* ===== LABEL ===== */
-.label {
-  text-align: center;
-  font-size: 18px;
-  font-weight: 600;
-  margin: 10px 0;
-  letter-spacing: 0.3px;
-
-  background: linear-gradient(135deg, #2563eb, #22c55e);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,80px);
+    gap:15px;
+    justify-content:center;
+    margin-top:20px;
 }
 
-/* ===== ROW OF BOXES ===== */
-.row {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 44px;
-  gap: 5px;
-
-  justify-content: center;
-  margin: 8px;
+.box{
+    width:80px;
 }
 
-/* ===== BOX ===== */
-.box {
-  
-  height: 44px;
-  box-sizing: border-box;
-  font-weight: 800;
-  text-shadow:
-    0 1px 2px rgba(0,0,0,.45),
-    0 0 6px rgba(168,85,247,.6);
-
-  text-align: center;
-  font-size: 20px;
-  border-radius: 10px;
-  border: 1px solid rgba(148,163,184,0.6);
-
-  background: linear-gradient(180deg, #ffffff, #f1f5f9);
-  box-shadow:
-    inset 0 1px 2px rgba(0,0,0,0.05),
-    0 4px 10px rgba(0,0,0,0.08);
-
-  transition: transform .15s ease, box-shadow .15s ease;
+.index{
+    color:#9ca3af;
+    font-size:14px;
+    margin-bottom:5px;
 }
 
-.box:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    inset 0 1px 2px rgba(0,0,0,0.05),
-    0 6px 14px rgba(0,0,0,0.15);
+.value{
+    height:60px;
+    background:#1f2937;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    font-weight:bold;
+    color:#00ffff;
+    box-shadow:0 0 10px #00ffff66 inset;
+    transition:0.2s;
 }
 
-/* ===== RESULT BOX ===== */
-.result {
-  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
-  border-color: #22c55e;
+.value.flash{
+    animation:flash 0.6s infinite;
 }
 
-/* ===== INPUT ===== */
-#inputBit {
-  display: block;
-  margin: 12px auto;
-  width: 80px;
-  height: 46px;
-  font-size: 24px;
-  text-align: center;
+@keyframes flash{
+    0%{box-shadow:0 0 10px #00ffff;}
+    50%{box-shadow:0 0 25px #00ffff;}
+    100%{box-shadow:0 0 10px #00ffff;}
 }
 
-/* ===== SEQUENCE PREVIEW ===== */
-.sequence-grid {
-  display: grid;
-  grid-template-columns: repeat(10, 24px); /* 20 bit / hàng */
-  gap: 5px;
-
-  max-height: 160px;
-  overflow-y: auto;
-  padding: 8px;
-
-  border-radius: 12px;
-  border: 1px solid rgba(148,163,184,0.4);
-  background: rgba(248,250,252,0.85);
+button{
+    padding:10px 25px;
+    font-size:16px;
+    border:none;
+    border-radius:10px;
+    background:#06b6d4;
+    color:white;
+    cursor:pointer;
+    box-shadow:0 0 10px #06b6d4;
 }
 
-/* ===== SEQUENCE BIT ===== */
-.sequence-bit {
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
-  font-size: 12px;
-
-  border-radius: 6px;
-  border: 1px solid rgba(148,163,184,0.6);
-  background: linear-gradient(180deg, #ffffff, #f1f5f9);
+button:hover{
+    box-shadow:0 0 20px #06b6d4;
 }
-
-.sequence-bit.context {
-  opacity: 0.45;
-}
-
-.sequence-bit.used {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: #fff;
-  border-color: #16a34a;
-  box-shadow: 0 0 12px rgba(34,197,94,.6);
-}
-
-/* ===== STATUS ===== */
-.status {
-  text-align: center;
-  font-size: 12px;
-  margin-top: 8px;
-}
-
-/* ===== NOT BIT LUNG LINH ===== */
-/* ===== NOT BIT LUNG LINH (VÀNG ĐỎ) ===== */
-.box.not {
-  background: linear-gradient(135deg, #facc15, #ef4444);
-  color: #fff;
-  border: none;
-  box-shadow:
-    0 0 8px rgba(250,204,21,.7),
-    0 0 18px rgba(239,68,68,.8);
-  animation: glow-fire 1.3s ease-in-out infinite alternate;
-}
-
-@keyframes glow-fire {
-  from {
-    box-shadow:
-      0 0 6px rgba(250,204,21,.5),
-      0 0 14px rgba(239,68,68,.5);
-  }
-  to {
-    box-shadow:
-      0 0 16px rgba(250,204,21,.9),
-      0 0 32px rgba(239,68,68,.9);
-  }
-}
-#clearHistory {
-  margin-top: 8px;
-  padding: 6px 14px;
-  font-weight: bold;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background: linear-gradient(135deg, #7c2d12, #dc2626);
-  color: #fff;
-  box-shadow: 0 0 8px rgba(220,38,38,.6);
-  transition: transform .15s, box-shadow .15s;
-}
-
-#clearHistory:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 14px rgba(220,38,38,.9);
-}
-
 
 </style>
 </head>
 
 <body>
-<div class="card">
 
-  <div class="label">10 bit nhập</div>
-  <div class="row" id="inputs"></div>
+<div class="container">
 
-  <div class="label">10 bit trùng trong sequence</div>
-  <div class="row" id="sequenceCut"></div>
+<button onclick="startRandom()">Random</button>
 
-  <div class="label">5 bit sau block</div>
-  <div class="row" id="outputs"></div>
-  
-  <div class="label">5 bit đảo (NOT)</div>
-<div class="row" id="outputsNot"></div>
-
-
-  <input id="inputBit" maxlength="1" inputmode="numeric">
-
-  <div class="status" id="status">Đang tải sequence…</div>
-
-  <div class="label">Sequence (hiển thị quanh block trùng)</div>
-  <div id="sequenceDisplay" class="sequence-grid"></div>
-<div class="label">Lịch sử bit đã nhập</div>
-<textarea
-  id="history"
-  rows="4"
-  style="
-    width: 100%;
-    max-width: 420px;
-    margin-top: 8px;
-    padding: 10px;
-    border-radius: 10px;
-    font-family: monospace;
-    font-size: 14px;
-    resize: vertical;
-  "
-  readonly
-></textarea>
-<button id="clearHistory">Xóa lịch sử</button>
+<div class="grid" id="grid"></div>
 
 </div>
 
 <script>
-/* ===== CONFIG ===== */
-const IPFS_URL =
-  "https://tomato-delicate-zebra-533.mypinata.cloud/ipfs/bafybeif675b46fvdnjpgd263hudgxtgk3f4tosyycnr5ol53jxanvdncze";
 
-const BIT_LEN = 10;
-const RESULT_LEN = 5;
-const CONTEXT_BLOCKS = 5; // số block trước & sau block trùng
+const grid = document.getElementById("grid");
 
-/* ===== UI SIZE AUTO ===== */
-const BOX = 44;
-const GAP = 5;
-
-/* ===== CREATE BOXES ===== */
-function createBoxes(id, count, cls="") {
-  const wrap = document.getElementById(id);
-  for (let i = 0; i < count; i++) {
-    const b = document.createElement("input");
-    b.className = "box " + cls;
-    b.readOnly = true;
-    wrap.appendChild(b);
-  }
+for(let i=0;i<10;i++){
+    grid.innerHTML += `
+    <div class="box">
+        <div class="index">${i}</div>
+        <div class="value" id="v${i}">-</div>
+    </div>`;
 }
 
-createBoxes("inputs", BIT_LEN);
-createBoxes("outputs", RESULT_LEN, "result");
-createBoxes("sequenceCut", BIT_LEN, "result");
+let timer;
+let speed = 50;
 
-createBoxes("outputsNot", RESULT_LEN, "result not");
-
-const outputNotBoxes =
-  document.querySelectorAll("#outputsNot input");
-
-/* ===== AUTO WIDTH FOR ROW ===== */
-document.querySelectorAll(".row").forEach(row => {
-  const count = row.children.length;
-  row.style.minWidth =
-    count * BOX + (count - 1) * GAP + "px";
-});
-
-/* ===== STATE ===== */
-let cleanSequence = "";
-let buffer = Array(BIT_LEN).fill("");
-let count = 0;
-let locked = true;
-
-/* ===== ELEMENTS ===== */
-const seqContainer = document.getElementById("sequenceDisplay");
-const inputBit = document.getElementById("inputBit");
-const status = document.getElementById("status");
-
-const inputBoxes = document.querySelectorAll("#inputs input");
-const seqCutBoxes = document.querySelectorAll("#sequenceCut input");
-const outputBoxes = document.querySelectorAll("#outputs input");
-const clearBtn = document.getElementById("clearHistory");
-const historyBox = document.getElementById("history");
-clearBtn.addEventListener("click", () => {
-  localStorage.removeItem("bitHistory");
-  historyBox.value = "";
-});
-
-// load lịch sử bit đã lưu
-const savedHistory = localStorage.getItem("bitHistory") || "";
-historyBox.value = savedHistory;
-
-/* ===== LOAD SEQUENCE ===== */
-fetch(IPFS_URL)
-  .then(r => r.text())
-  .then(text => {
-    cleanSequence = text.replace(/\s+/g, "");
-    status.textContent =
-      `✔ Đã tải ${cleanSequence.length.toLocaleString()} bit`;
-    locked = false;
-    inputBit.focus();
-  })
-  .catch(() => status.textContent = "❌ Lỗi tải sequence");
-
-/* ===== RENDER PREVIEW AROUND BLOCK ===== */
-function renderPreview(blockIndex) {
-  seqContainer.innerHTML = "";
-
-  const totalBlocks = Math.floor(cleanSequence.length / BIT_LEN);
-  const startBlock = Math.max(0, blockIndex - CONTEXT_BLOCKS);
-  const endBlock = Math.min(totalBlocks - 1, blockIndex + CONTEXT_BLOCKS);
-
-  for (let b = startBlock; b <= endBlock; b++) {
-    for (let i = 0; i < BIT_LEN; i++) {
-      const bitIndex = b * BIT_LEN + i;
-      const d = document.createElement("div");
-      d.className = "sequence-bit";
-      d.textContent = cleanSequence[bitIndex];
-
-      if (b === blockIndex) {
-        d.classList.add("used");
-      } else {
-        d.classList.add("context");
-      }
-
-      seqContainer.appendChild(d);
+function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+        let j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]]=[arr[j],arr[i]];
     }
-  }
 }
 
-/* ===== INPUT HANDLER ===== */
-inputBit.addEventListener("input", () => {
-  if (locked) return;
+function spin(){
 
-  const v = inputBit.value;
-  inputBit.value = "";
-  if (v !== "0" && v !== "1") return;
+    let arr=[0,1,2,3,4,5,6,7,8,9];
+    shuffle(arr);
 
-  buffer.shift();
-  buffer.push(v);
-  inputBoxes.forEach((b,i)=>b.value=buffer[i]);
-  count++;
-
-  if (count < BIT_LEN) return;
-  locked = true;
-  const inputBits = buffer.join("");
-
-  let matchIndex = -1;
-
-
-  // lưu 10 bit đã nhập vào lịch sử
-let history = localStorage.getItem("bitHistory") || "";
-history += inputBits;
-
-localStorage.setItem("bitHistory", history);
-historyBox.value = history;
-
-    // CẮT TỪ KÝ TỰ ĐẦU, MỖI BLOCK 10 BIT
-  for (let i = 0; i + BIT_LEN <= cleanSequence.length; i += BIT_LEN) {
-    if (cleanSequence.slice(i, i + BIT_LEN) === inputBits) {
-      matchIndex = i;
-      break;
-    }
-  }
-
-  seqCutBoxes.forEach(b=>b.value="");
-  outputBoxes.forEach(b=>b.value="");
-
-  if (matchIndex !== -1) {
-    const blockNumber = matchIndex / BIT_LEN + 1;
-    status.textContent = `✔ Trùng tại block #${blockNumber}`;
-
-    for (let i = 0; i < BIT_LEN; i++) {
-      seqCutBoxes[i].value = cleanSequence[matchIndex + i];
+    for(let i=0;i<10;i++){
+        document.getElementById("v"+i).innerText = arr[i];
     }
 
-   for (let i = 0; i < RESULT_LEN; i++) {
-  const bit = cleanSequence[matchIndex + BIT_LEN + i] || "";
-  outputBoxes[i].value = bit;
+    speed += 20;
 
-  // NOT bit: 1->0, 0->1
-  outputNotBoxes[i].value = bit === "1" ? "0" : "1";
+    if(speed < 400){
+        timer=setTimeout(spin,speed);
+    }
+    else{
+        for(let i=0;i<10;i++){
+            document.getElementById("v"+i).classList.add("flash");
+        }
+    }
 }
 
-    renderPreview(matchIndex / BIT_LEN);
-  } else {
-    status.textContent = "❌ Không tìm thấy block trùng";
-    seqContainer.innerHTML = "";
-  }
+function startRandom(){
 
-  setTimeout(() => {
-    buffer.fill("");
-    inputBoxes.forEach(b=>b.value="");
-    count = 0;
-    locked = false;
-  }, 300);
-});
+    for(let i=0;i<10;i++){
+        document.getElementById("v"+i).classList.remove("flash");
+    }
+
+    speed = 50;
+    spin();
+}
+
 </script>
+
 </body>
 </html>
-
-
-
-

@@ -6,88 +6,144 @@
 <title>Input 7 số</title>
 
 <style>
-  body {
+  /* Reset nhẹ cho đỡ xấu */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Nền */
+body {
   font-family: 'Segoe UI', sans-serif;
-  text-align: center;
-  margin-top: 80px;
-  background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top, #1f2a44, #0f172a);
   color: #fff;
 }
 
-/* Tiêu đề */
-h3 {
-  margin-bottom: 25px;
-  letter-spacing: 1px;
-  opacity: 0.9;
+/* Container */
+.container {
+  text-align: center;
 }
 
-/* Container 7 ô */
+/* Title */
+h3 {
+  margin-bottom: 25px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+/* 7 ô hiển thị */
 .boxes {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 25px;
+  gap: 14px;
+  margin-bottom: 30px;
 }
 
-/* Ô số */
+/* Ô */
 .box {
-  width: 50px;
-  height: 60px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 2px solid rgba(255,255,255,0.15);
-  font-size: 28px;
+  width: 60px;
+  height: 70px;
+  border-radius: 16px;
+  font-size: 30px;
   font-weight: bold;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  backdrop-filter: blur(6px);
-  box-shadow: 
-    0 4px 15px rgba(0,0,0,0.3),
-    inset 0 0 10px rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.07);
+  border: 2px solid rgba(255,255,255,0.12);
 
-  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,0.5),
+    inset 0 0 12px rgba(255,255,255,0.05);
+
+  transition: all 0.25s ease;
 }
 
-/* Hiệu ứng khi có số */
-.box:not(:empty) {
-  border-color: #00d4ff;
-  box-shadow: 
-    0 0 12px rgba(0,212,255,0.6),
-    inset 0 0 8px rgba(0,212,255,0.3);
-  transform: translateY(-3px);
+/* Hover cho có tương tác */
+.box:hover {
+  transform: translateY(-6px) scale(1.05);
+  border-color: #38bdf8;
+  box-shadow:
+    0 0 20px rgba(56,189,248,0.6),
+    inset 0 0 10px rgba(56,189,248,0.3);
 }
 
-/* Input ẩn nhưng vẫn dùng */
+/* Input hiển thị đẹp */
 input {
-  opacity: 0;
-  position: absolute;
-  pointer-events: none;
+  width: 260px;
+  padding: 14px 18px;
+  font-size: 20px;
+  text-align: center;
+
+  border-radius: 12px;
+  border: none;
+  outline: none;
+
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+
+  backdrop-filter: blur(8px);
+
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,0.6),
+    0 4px 15px rgba(0,0,0,0.4);
+
+  transition: 0.3s;
 }
 
-/* Kết quả */
+/* Focus glow */
+input:focus {
+  box-shadow:
+    0 0 15px #22d3ee,
+    inset 0 0 10px rgba(34,211,238,0.4);
+  transform: scale(1.03);
+}
+
+/* Placeholder */
+input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+/* Result */
 #result {
   margin-top: 20px;
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 500;
   min-height: 24px;
-  transition: all 0.3s ease;
+  opacity: 0.9;
 }
 
-/* Khi đúng */
-#result:contains("Khớp") {
-  color: #00ffae;
+/* Animation nhẹ */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Khi sai */
-#result:contains("Không") {
-  color: #ff4d6d;
+.box, input, #result {
+  animation: fadeUp 0.5s ease;
 }
 </style>
 </head>
 
 <body>
+<div class="container">
+  <!-- toàn bộ nội dung -->
 
 <h3>Nhập 7 chữ số</h3>
 
@@ -112,7 +168,7 @@ input {
 />
 
 <p id="result"></p>
-
+    </div>
 <script>
   const CONST_A = "1234567";
   const CONST_B = "7654321";
